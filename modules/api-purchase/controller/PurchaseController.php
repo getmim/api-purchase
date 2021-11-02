@@ -67,16 +67,20 @@ class PurchaseController extends \Api\Controller
         CItem::remove(['id' => $cart_items_id]);
         _Cart::calculate($cart);
 
-        $purchase_id = Purchase::create([
+        $data = [
             'user'    => $cond['user'],
             'invoice' => 'INV-' . uniqid() . '-' . uniqid(),
             'status'  => 1,
             'items'   => count($cart_items),
             'quantity' => $quantities,
             'price'   => $prices,
-            'courier_fee' => 0,
             'total'   => $prices
-        ]);
+        ];
+        if (module_exists('purchase-delivery')) {
+            $data['courier_fee'] = 0;
+        }
+
+        $purchase_id = Purchase::create();
 
         $purchase = Purchase::getOne(['id' => $purchase_id]);
         $invoice = Invoice::generate($purchase);
