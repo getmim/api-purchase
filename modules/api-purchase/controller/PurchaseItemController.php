@@ -2,7 +2,7 @@
 /**
  * PurchaseItemController
  * @package api-purchase
- * @version 0.0.1
+ * @version 0.0.2
  */
 
 namespace ApiPurchase\Controller;
@@ -10,6 +10,7 @@ namespace ApiPurchase\Controller;
 use Purchase\Model\Purchase;
 use Purchase\Model\PurchaseProduct as PProduct;
 use LibFormatter\Library\Formatter;
+use LibUser\Library\Fetcher;
 
 class PurchaseItemController extends \Api\Controller
 {
@@ -29,6 +30,14 @@ class PurchaseItemController extends \Api\Controller
 
         if (!isset($cond['user'])) {
             return $this->resp(401, 'Required `user` field is not set');
+        }
+
+        $user = Fetcher::getOne([
+            'id' => $cond['user'],
+            'status' => ['__op', '>', 0]
+        ]);
+        if (!$user) {
+            return $this->resp(400, 'User not found');
         }
 
         $purchase = Purchase::getOne($cond);

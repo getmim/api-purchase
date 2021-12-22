@@ -2,7 +2,7 @@
 /**
  * PurchaseController
  * @package api-purchase
- * @version 0.0.1
+ * @version 0.0.2
  */
 
 namespace ApiPurchase\Controller;
@@ -15,6 +15,7 @@ use LibFormatter\Library\Formatter;
 use LibForm\Library\Form;
 use Purchase\Library\Invoice;
 use Cart\Library\Cart as _Cart;
+use LibUser\Library\Fetcher;
 
 class PurchaseController extends \Api\Controller
 {
@@ -32,6 +33,14 @@ class PurchaseController extends \Api\Controller
 
         if (!isset($cond['user'])) {
             return $this->resp(401, 'Required `user` field is not set');
+        }
+
+        $user = Fetcher::getOne([
+            'id' => $cond['user'],
+            'status' => ['__op', '>', 0]
+        ]);
+        if (!$user) {
+            return $this->resp(400, 'User not found');
         }
 
         $cart = Cart::getOne($cond);
@@ -80,7 +89,7 @@ class PurchaseController extends \Api\Controller
             $data['courier_fee'] = 0;
         }
 
-        $purchase_id = Purchase::create();
+        $purchase_id = Purchase::create($data);
 
         $purchase = Purchase::getOne(['id' => $purchase_id]);
         $invoice = Invoice::generate($purchase);
@@ -122,6 +131,14 @@ class PurchaseController extends \Api\Controller
             return $this->resp(401, 'Required `user` field is not set');
         }
 
+        $user = Fetcher::getOne([
+            'id' => $cond['user'],
+            'status' => ['__op', '>', 0]
+        ]);
+        if (!$user) {
+            return $this->resp(400, 'User not found');
+        }
+
         list($page, $rpp) = $this->req->getPager(12, 24);
 
         $purchases = Purchase::get($cond, $rpp, $page, ['created' => false]) ?? [];
@@ -159,6 +176,14 @@ class PurchaseController extends \Api\Controller
             return $this->resp(401, 'Required `user` field is not set');
         }
 
+        $user = Fetcher::getOne([
+            'id' => $cond['user'],
+            'status' => ['__op', '>', 0]
+        ]);
+        if (!$user) {
+            return $this->resp(400, 'User not found');
+        }
+
         $purchase = Purchase::getOne($cond);
         if (!$purchase) {
             return $this->resp(404);
@@ -185,6 +210,14 @@ class PurchaseController extends \Api\Controller
 
         if (!isset($cond['user'])) {
             return $this->resp(401, 'Required `user` field is not set');
+        }
+
+        $user = Fetcher::getOne([
+            'id' => $cond['user'],
+            'status' => ['__op', '>', 0]
+        ]);
+        if (!$user) {
+            return $this->resp(400, 'User not found');
         }
 
         $purchase = Purchase::getOne($cond);
