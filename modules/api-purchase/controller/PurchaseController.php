@@ -79,7 +79,7 @@ class PurchaseController extends \Api\Controller
         $data = [
             'user'    => $cond['user'],
             'invoice' => 'INV-' . uniqid() . '-' . uniqid(),
-            'status'  => 1,
+            'status'  => 10,
             'items'   => count($cart_items),
             'quantity' => $quantities,
             'price'   => $prices,

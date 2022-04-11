@@ -2,7 +2,7 @@
 
 return [
     '__name' => 'api-purchase',
-    '__version' => '0.0.2',
+    '__version' => '0.0.3',
     '__git' => 'git@github.com:getmim/api-purchase.git',
     '__license' => 'MIT',
     '__author' => [
