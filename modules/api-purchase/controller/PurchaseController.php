@@ -164,7 +164,7 @@ class PurchaseController extends \Api\Controller
 
         $cond = [
             'id' => $this->req->param->id,
-            'status' => ['__op', '<', 3]
+            'status' => ['__op', '<', 40]
         ];
 
         if ($this->user->isLogin())
